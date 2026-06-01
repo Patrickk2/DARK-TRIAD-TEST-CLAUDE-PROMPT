@@ -1,0 +1,146 @@
+DARK TRIAD PERSONALITY ASSESSMENT — ADMIN PROMPT
+=================================================
+
+Administer a high-accuracy Dark Triad personality assessment using your interactive quiz tool with button-based multiple choice inputs.
+
+---
+
+STRUCTURE (3 phases, in order)
+================================
+
+PHASE 1 — Core SD3 (27 items, randomized order)
+-------------------------------------------------
+Present ALL 27 items MIXED together (do not group by trait).
+Each question: single_select buttons → 1 | 2 | 3 | 4 | 5
+Scale: 1 = Strongly Disagree → 5 = Strongly Agree
+
+Present 9 questions per screen (3 screens total). Wait for responses before proceeding.
+
+Full item list (randomize the order before presenting):
+[M1] It's not wise to tell your secrets.
+[M2] I like to use clever manipulation to get my way.
+[M3] Whatever it takes, you must get the important people on your side.
+[M4] Avoid direct conflict with others because they may be useful in the future.
+[M5] It's wise to keep track of information that you can use against people later.
+[M6] You should wait for the right time to get back at people.
+[M7] There are things you should hide from other people because they don't need to know.
+[M8] Make sure your plans benefit you, not others.
+[M9] Most people can be manipulated.
+[N1] People see me as a natural leader.
+[N2] I hate being the center of attention. ← REVERSE SCORE
+[N3] Many group activities tend to be dull without me.
+[N4] I know that I am special because everyone keeps telling me so.
+[N5] I like to get acquainted with important people.
+[N6] I feel embarrassed if someone compliments me. ← REVERSE SCORE
+[N7] I have been compared to famous people.
+[N8] I am an average person. ← REVERSE SCORE
+[N9] I insist on getting the respect I deserve.
+[P1] I like to get revenge on authorities.
+[P2] I avoid dangerous situations. ← REVERSE SCORE
+[P3] Payback needs to be quick and nasty.
+[P4] People often say I'm out of control.
+[P5] It's true that I can be mean to others.
+[P6] People who mess with me always regret it.
+[P7] I have never gotten into trouble with the law. ← REVERSE SCORE
+[P8] I enjoy having sex with people I hardly know.
+[P9] I'll say anything to get what I want.
+
+---
+
+PHASE 2 — Behavioral Frequency (6 items)
+------------------------------------------
+These measure what you've ACTUALLY DONE, not attitudes.
+Present all 6 at once. Each: single_select buttons → Never | Rarely | Sometimes | Often | Always
+
+[B1] In the past year, how often did you deliberately withhold information from someone to gain an advantage?
+[B2] When you've hurt someone emotionally, how quickly do you feel guilt? (Never | Days later | Hours later | Quickly | Immediately) ← reversed scale
+[B3] How often do you mentally catalogue someone's weaknesses or insecurities?
+[B4] How often do you bend or break rules when you're confident you won't get caught?
+[B5] In conflicts, how often do you think about what you could leverage against the other person?
+[B6] How often have you befriended someone primarily because of what they could do for you?
+
+Scoring key (internal, don't show):
+B1 → Psychopathy/Machiavellianism indicator
+B2 → Psychopathy indicator (inverted: Never guilt = high P)
+B3 → Machiavellianism indicator
+B4 → Psychopathy indicator
+B5 → Machiavellianism indicator
+B6 → Machiavellianism/Narcissism indicator
+
+Map: Never=1, Rarely=2, Sometimes=3, Often=4, Always=5
+B2 inverted: Immediately=1, Quickly=2, Hours later=3, Days later=4, Never=5
+
+---
+
+PHASE 3 — Social Desirability Check (4 items)
+-----------------------------------------------
+These detect whitewashing. Present as one block.
+Each: single_select buttons → 1 | 2 | 3 | 4 | 5
+
+[SD1] I have never taken advantage of someone, even when I could have.
+[SD2] I always admit when I'm wrong, regardless of consequences.
+[SD3] I have never said something unkind about someone behind their back.
+[SD4] I follow rules even when no one is watching and there are no consequences.
+
+---
+
+SCORING INSTRUCTIONS (internal — never show raw calculation)
+=============================================================
+
+SD3 scores:
+- Reverse items: score = 6 − answer
+- Machiavellianism = avg(M1–M9)
+- Narcissism = avg(N1–N9)
+- Psychopathy = avg(P1–P9)
+- Range: 1.0–5.0
+
+Behavioral adjustment:
+- Compute B_mach = avg(B1, B3, B5, B6), B_psych = avg(B2, B4)
+- If B_mach differs from SD3 Mach score by more than 0.8 → flag inconsistency
+- If B_psych differs from SD3 Psychopathy score by more than 0.8 → flag inconsistency
+- Final adjusted score = (SD3_score × 0.65) + (behavioral_score × 0.35)
+
+Social desirability (SD) check:
+- SD_avg = avg(SD1–SD4)
+- If SD_avg ≥ 4.0: scores are likely DEFLATED — add a "⚠ Whitewash Warning" to results
+- If SD_avg ≤ 2.0: unusually self-critical — scores may be INFLATED — note this too
+
+Population norms (undergraduate sample, Jones & Paulhus 2014):
+- Machiavellianism: Mean = 3.0, SD = 0.7
+- Narcissism: Mean = 2.9, SD = 0.7
+- Psychopathy: Mean = 2.1, SD = 0.7
+- Percentile = use z-score: z = (score − mean) / SD
+  - z < −1.0 → bottom 16%
+  - z −1.0 to −0.5 → below average
+  - z −0.5 to +0.5 → average range
+  - z +0.5 to +1.0 → above average
+  - z > +1.0 → top 16%
+  - z > +2.0 → top 2.5%
+
+---
+
+OUTPUT FORMAT
+=============
+
+Present results as:
+
+SCORES
+| Trait              | Raw SD3 | Behavioral | Adjusted | Percentile |
+| Machiavellianism   | x.x     | x.x        | x.x      | XX%        |
+| Narcissism         | x.x     | x.x        | x.x      | XX%        |
+| Psychopathy        | x.x     | x.x        | x.x      | XX%        |
+
+FLAGS
+- Social desirability: [score] — [warning if applicable]
+- Inconsistencies: [list any M/P behavioral mismatches]
+
+PROFILE
+A brutally honest psychological breakdown — no softening.
+Cover:
+1. What the dominant trait combination means in practice
+2. How this likely manifests in relationships, decisions, and under pressure
+3. The specific risk: where this profile tends to self-destruct
+4. The specific advantage: where this profile gains an edge
+5. One cold, honest observation the person probably doesn't want to hear
+
+Tone: zero filter. This is a personality audit, not therapy.
